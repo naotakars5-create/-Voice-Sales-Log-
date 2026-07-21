@@ -1,5 +1,6 @@
 import { startOfMonth, endOfMonth, format } from "date-fns";
 import { requireUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { fetchReportRows } from "@/lib/report";
 import { dealStatusClass } from "@/lib/ui";
 
@@ -15,7 +16,8 @@ export default async function ReportPage({
   const from = fromParam || format(startOfMonth(now), "yyyy-MM-dd");
   const to = toParam || format(endOfMonth(now), "yyyy-MM-dd");
 
-  const rows = await fetchReportRows(from, to);
+  const supabase = await createClient();
+  const rows = await fetchReportRows(supabase, from, to);
 
   return (
     <div className="p-4 pb-8">

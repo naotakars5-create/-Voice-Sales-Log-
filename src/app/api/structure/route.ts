@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { authenticateRequest } from "@/lib/apiAuth";
 import { callClaude, parseJsonResponse } from "@/lib/anthropic";
 import type { StructuredResult } from "@/types/db";
 
@@ -52,12 +52,8 @@ function validate(result: StructuredResult): StructuredResult {
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  const auth = await authenticateRequest(request);
+  if (!auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

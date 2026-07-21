@@ -5,12 +5,21 @@ import BottomNav from "@/components/BottomNav";
 export const metadata: Metadata = {
   title: "Voice Sales Log",
   description: "喋るだけ営業記録",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "VoiceSales",
+  },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: "#2563eb",
 };
 
 export default function RootLayout({

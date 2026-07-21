@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { DealStatus } from "@/types/db";
 
 export interface ReportRow {
@@ -21,9 +21,11 @@ interface DealQueryRow {
   record_deals: { records: { record_date: string } | null }[];
 }
 
-export async function fetchReportRows(from: string, to: string): Promise<ReportRow[]> {
-  const supabase = await createClient();
-
+export async function fetchReportRows(
+  supabase: SupabaseClient,
+  from: string,
+  to: string
+): Promise<ReportRow[]> {
   const { data: deals } = await supabase
     .from("deals")
     .select(

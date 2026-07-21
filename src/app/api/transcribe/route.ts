@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { authenticateRequest } from "@/lib/apiAuth";
 import { transcribeAudio } from "@/lib/openai";
 
 export const runtime = "nodejs";
@@ -18,14 +18,11 @@ function extensionFor(mimeType: string): string {
 // `${user.id}/${sessionId}/${sequence}.${ext}` and transcribed independently
 // so a mid-recording failure only ever loses the current segment.
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  const auth = await authenticateRequest(request);
+  if (!auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const { supabase, user } = auth;
 
   const form = await request.formData();
   const file = form.get("file");

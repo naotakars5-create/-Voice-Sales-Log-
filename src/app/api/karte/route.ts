@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { authenticateRequest } from "@/lib/apiAuth";
 import { callClaude } from "@/lib/anthropic";
 
 export const runtime = "nodejs";
@@ -23,14 +23,11 @@ const SYSTEM_PROMPT = `あなたは営業担当者を支援するアシスタン
 過去の商談で顧客の反応が良かった提案・アプローチ`;
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
+  const auth = await authenticateRequest(request);
+  if (!auth) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const { supabase } = auth;
 
   const { client_id } = (await request.json()) as { client_id: string };
   if (!client_id) {
