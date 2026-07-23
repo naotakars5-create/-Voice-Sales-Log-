@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/apiAuth";
-import { callClaude } from "@/lib/anthropic";
+import { callLLM } from "@/lib/llm";
 
 export const runtime = "nodejs";
 
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   const userMessage = `クライアント名: ${client.name}\n\n過去の商談記録:\n${history}`;
 
   try {
-    const karte = await callClaude(SYSTEM_PROMPT, userMessage, 1536);
+    const karte = await callLLM(SYSTEM_PROMPT, userMessage, 1536);
     return NextResponse.json({ karte });
   } catch (err) {
     return NextResponse.json(

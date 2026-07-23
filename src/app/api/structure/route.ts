@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/apiAuth";
-import { callClaude, parseJsonResponse } from "@/lib/anthropic";
+import { callLLM } from "@/lib/llm";
+import { parseJsonResponse } from "@/lib/anthropic";
 import type { StructuredResult } from "@/types/db";
 
 export const runtime = "nodejs";
@@ -72,7 +73,7 @@ export async function POST(request: Request) {
   const system = buildSystemPrompt(mode, date, existingClients ?? []);
 
   try {
-    const raw = await callClaude(system, transcript, 1536);
+    const raw = await callLLM(system, transcript, 1536);
     const parsed = parseJsonResponse<StructuredResult>(raw);
     return NextResponse.json(validate(parsed));
   } catch (err) {

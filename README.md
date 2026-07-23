@@ -38,10 +38,14 @@ cp .env.local.example .env.local
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 同上（anon public） |
 | `SUPABASE_SERVICE_ROLE_KEY` | 同上（service_role・秘匿） |
-| `OPENAI_API_KEY` | platform.openai.com（Whisper用） |
-| `ANTHROPIC_API_KEY` | console.anthropic.com |
+| `OPENAI_API_KEY` | platform.openai.com（Whisper＋AI処理） |
+| `ANTHROPIC_API_KEY` | console.anthropic.com（**任意**） |
 
 APIキーはすべてサーバー側のみで使用され、クライアントには露出しません。
+
+`ANTHROPIC_API_KEY` は任意です。設定するとAI構造化・カルテ生成にClaudeを使い、
+未設定の場合はOpenAI（`gpt-4o-mini`、`OPENAI_MODEL` で変更可）で動作するため、
+**OpenAIのキー1つだけで全機能が使えます**。
 
 ### 3. 起動
 
